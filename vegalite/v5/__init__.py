@@ -1,16 +1,46 @@
-# ruff: noqa
-__version__ = "5.5.0"
+# ruff: noqa: F401, F403, F405
+from altair.expr.core import datum
+from altair.vegalite.v5 import api, compiler, schema
+from altair.vegalite.v5.api import *
+from altair.vegalite.v5.compiler import vegalite_compilers
+from altair.vegalite.v5.data import (
+    MaxRowsError,
+    data_transformers,
+    default_data_transformer,
+    limit_rows,
+    sample,
+    to_csv,
+    to_json,
+    to_values,
+)
+from altair.vegalite.v5.display import (
+    VEGA_VERSION,
+    VEGAEMBED_VERSION,
+    VEGALITE_VERSION,
+    VegaLite,
+    renderers,
+)
+from altair.vegalite.v5.schema import *
 
 # The content of __all__ is automatically written by
 # tools/update_init_file.py. Do not modify directly.
+
 __all__ = [
+    "SCHEMA_URL",
+    "SCHEMA_VERSION",
+    "TOPLEVEL_ONLY_KEYS",
+    "URI",
+    "VEGAEMBED_VERSION",
+    "VEGALITE_VERSION",
+    "VEGA_VERSION",
+    "X2",
+    "Y2",
     "Aggregate",
     "AggregateOp",
     "AggregateTransform",
     "AggregatedFieldDef",
     "Align",
     "AllSortString",
-    "AltairDeprecationWarning",
     "Angle",
     "AngleDatum",
     "AngleValue",
@@ -133,7 +163,6 @@ __all__ = [
     "Description",
     "DescriptionValue",
     "Detail",
-    "Dict",
     "DictInlineDataset",
     "DictSelectionInit",
     "DictSelectionInitInterval",
@@ -234,7 +263,6 @@ __all__ = [
     "JoinAggregateFieldDef",
     "JoinAggregateTransform",
     "JsonDataFormat",
-    "JupyterChart",
     "Key",
     "LabelOverlap",
     "LatLongDef",
@@ -364,8 +392,6 @@ __all__ = [
     "RowColboolean",
     "RowColnumber",
     "RowColumnEncodingFieldDef",
-    "SCHEMA_URL",
-    "SCHEMA_VERSION",
     "SampleTransform",
     "Scale",
     "ScaleBinParams",
@@ -473,7 +499,6 @@ __all__ = [
     "StrokeWidthValue",
     "StyleConfigIndex",
     "SymbolShape",
-    "TOPLEVEL_ONLY_KEYS",
     "Text",
     "TextBaseline",
     "TextDatum",
@@ -521,8 +546,6 @@ __all__ = [
     "Type",
     "TypeForShape",
     "TypedFieldDef",
-    "URI",
-    "Undefined",
     "UnitSpec",
     "UnitSpecWithFrame",
     "Url",
@@ -532,9 +555,6 @@ __all__ = [
     "UtcSingleTimeUnit",
     "VConcatChart",
     "VConcatSpecGenericSpec",
-    "VEGAEMBED_VERSION",
-    "VEGALITE_VERSION",
-    "VEGA_VERSION",
     "ValueChannelMixin",
     "ValueDefWithConditionMarkPropFieldOrDatumDefGradientstringnull",
     "ValueDefWithConditionMarkPropFieldOrDatumDefTypeForShapestringnull",
@@ -545,8 +565,6 @@ __all__ = [
     "ValueDefnumber",
     "ValueDefnumberwidthheightExprRef",
     "VariableParameter",
-    "Vector10string",
-    "Vector12string",
     "Vector2DateTime",
     "Vector2Vector2number",
     "Vector2boolean",
@@ -554,6 +572,8 @@ __all__ = [
     "Vector2string",
     "Vector3number",
     "Vector7string",
+    "Vector10string",
+    "Vector12string",
     "VegaLite",
     "VegaLiteSchema",
     "ViewBackground",
@@ -564,7 +584,6 @@ __all__ = [
     "WindowOnlyOp",
     "WindowTransform",
     "X",
-    "X2",
     "X2Datum",
     "X2Value",
     "XDatum",
@@ -577,7 +596,6 @@ __all__ = [
     "XOffsetValue",
     "XValue",
     "Y",
-    "Y2",
     "Y2Datum",
     "Y2Value",
     "YDatum",
@@ -601,96 +619,34 @@ __all__ = [
     "concat",
     "condition",
     "core",
-    "data",
     "data_transformers",
     "datum",
     "default_data_transformer",
-    "display",
-    "expr",
     "graticule",
     "hconcat",
-    "jupyter",
     "layer",
     "limit_rows",
-    "load_ipython_extension",
     "load_schema",
     "mixins",
     "param",
-    "parse_shorthand",
     "renderers",
     "repeat",
     "sample",
     "schema",
+    "selection",
     "selection_interval",
+    "selection_multi",
     "selection_point",
+    "selection_single",
     "sequence",
     "sphere",
-    "theme",
     "to_csv",
     "to_json",
     "to_values",
     "topo_feature",
-    "typing",
-    "utils",
-    "v5",
     "value",
     "vconcat",
-    "vegalite",
     "vegalite_compilers",
     "when",
     "with_property_setters",
 ]
-
-
-def __dir__():
-    return __all__
-
-
-from altair.vegalite import *
-from altair.vegalite.v5.schema.core import Dict
-from altair.jupyter import JupyterChart
-from altair.expr import expr
-from altair.utils import AltairDeprecationWarning, parse_shorthand, Undefined
-from altair import typing, theme
-
-
-def load_ipython_extension(ipython):
-    from altair._magics import vegalite
-
-    ipython.register_magic_function(vegalite, "cell")
-
-
-def __getattr__(name: str):
-    from altair.utils.deprecation import deprecated_warn
-
-    if name == "themes":
-        deprecated_warn(
-            "Most cases require only the following change:\n\n"
-            "    # Deprecated\n"
-            "    alt.themes.enable('quartz')\n\n"
-            "    # Updated\n"
-            "    alt.theme.enable('quartz')\n\n"
-            "If your code registers a theme, make the following change:\n\n"
-            "    # Deprecated\n"
-            "    def custom_theme():\n"
-            "        return {'height': 400, 'width': 700}\n"
-            "    alt.themes.register('theme_name', custom_theme)\n"
-            "    alt.themes.enable('theme_name')\n\n"
-            "    # Updated\n"
-            "    @alt.theme.register('theme_name', enable=True)\n"
-            "    def custom_theme():\n"
-            "        return alt.theme.ThemeConfig(\n"
-            "            {'height': 400, 'width': 700}\n"
-            "        )\n\n"
-            "See the updated User Guide for further details:\n"
-            "    https://altair-viz.github.io/user_guide/api.html#theme\n"
-            "    https://altair-viz.github.io/user_guide/customization.html#chart-themes",
-            version="5.5.0",
-            alternative="altair.theme",
-            stacklevel=3,
-            action="once",
-        )
-        return theme._themes
-    else:
-        msg = f"module {__name__!r} has no attribute {name!r}"
-        raise AttributeError(msg)
